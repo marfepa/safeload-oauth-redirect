@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<title>Strava → SafeLoad</title>
-<script>
-  // Captura el código que Strava nos devuelve
-  const params = new URLSearchParams(window.location.search);
-  const code   = params.get("code");
-  // Reenvía al esquema custom de tu app
-  window.location = `SafeLoad://com.training.loadmonitor?code=${code}`;
-</script>
-<p>Redirigiendo a SafeLoad…</p>
+<html>
+  <head><meta charset="utf-8"></head>
+  <body>
+    <script>
+      // Extrae el código que Strava pasa por query param y lo reenvía al esquema de tu app
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (code) {
+        window.location = `com.training.loadmonitor://strava-callback?code=${code}`;
+      } else {
+        document.body.textContent = 'Strava OAuth falló: no hay code';
+      }
+    </script>
+  </body>
+</html>
