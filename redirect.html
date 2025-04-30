@@ -1,23 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>SafeLoad OAuth Redirect</title>
-  <script>
-    // 1) Leemos el código de la URL
-    const params = new URLSearchParams(window.location.search);
-    const code   = params.get('code');
-    // 2) Si existe, lanzamos el deep link
-    if (code) {
-      // Asegúrate de que aquí coincide tu esquema/host con el del manifest:
-      const deepLink = `com.example.trainingloadmonitor://strava-callback?code=${code}`;
-      window.location.replace(deepLink);
-    } else {
-      document.body.textContent = 'OAuth failed: no code in query string.';
-    }
-  </script>
-</head>
-<body>
-  <p>Redirecting…</p>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/>
+<title>SafeLoad OAuth Redirect</title>
+<script>
+(function () {
+  // 1) Extraemos el parámetro ?code=XXX
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  if (!code) { document.body.textContent = 'Strava no devolvió código.'; return; }
+
+  // 2) Construimos el deep-link que tu app intercepta
+  const deepLink = `com.example.trainingloadmonitor://strava-callback?code=${code}`;
+
+  // 3) Redirigimos inmediatamente
+  location.replace(deepLink);
+
+  /* 4) Fallback por si el deep-link no abre la app (muestra un enlace) */
+  setTimeout(() => {
+    const a = document.createElement('a');
+    a.href = deepLink;
+    a.textContent = 'Toca aquí si no se abre SafeLoad';
+    document.body.appendChild(a);
+  }, 1500);
+})();
+</script>
+<style>body{font-family:sans-serif;text-align:center;margin-top:20vh}</style>
+</head><body><p>Abriendo SafeLoad…</p></body></html>
