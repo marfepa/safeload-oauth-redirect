@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html>
-  <head><meta charset="utf-8"></head>
-  <body>
-    <script>
-      // Extrae el código que Strava pasa por query param y lo reenvía al esquema de tu app
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
-      if (code) {
-        window.location = `com.training.loadmonitor://strava-callback?code=${code}`;
-      } else {
-        document.body.textContent = 'Strava OAuth falló: no hay code';
-      }
-    </script>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SafeLoad OAuth Redirect</title>
+  <script>
+    // 1) Leemos el código de la URL
+    const params = new URLSearchParams(window.location.search);
+    const code   = params.get('code');
+    // 2) Si existe, lanzamos el deep link
+    if (code) {
+      // Asegúrate de que aquí coincide tu esquema/host con el del manifest:
+      const deepLink = `com.example.trainingloadmonitor://strava-callback?code=${code}`;
+      window.location.replace(deepLink);
+    } else {
+      document.body.textContent = 'OAuth failed: no code in query string.';
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting…</p>
+</body>
 </html>
